@@ -1,0 +1,14 @@
+# Nix build outputs
+result
+result-*
+
+# direnv
+.direnv
+
+# mdBook render output
+/book
+
+# Editor / OS cruft
+*.swp
+*~
+.DS_Store

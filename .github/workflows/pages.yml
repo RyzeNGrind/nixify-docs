@@ -1,0 +1,38 @@
+# Phase B publishing — Nix-built mdBook → GitHub Pages.
+# Intentionally `workflow_dispatch` ONLY: it never auto-runs on push, so it
+# cannot burn Actions quota or fail before Pages is enabled. To go live:
+#   1. Repo Settings → Pages → Source = "GitHub Actions".
+#   2. Run this workflow once from the Actions tab.
+name: pages
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v30
+        with:
+          extra_nix_config: "experimental-features = nix-command flakes"
+      - name: Build mdBook via Nix
+        run: nix build .#docs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: result
+      - id: deploy
+        uses: actions/deploy-pages@v4

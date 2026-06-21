@@ -1,0 +1,17 @@
+# Phase B: mdBook config. Inert until `nix build .#docs` / the Pages workflow
+# runs. Phase A ships the same docs/ as plain Markdown (DeepWiki + raw render).
+[book]
+title = "nixify — architecture & engineering practices"
+description = "Public documentation surface for the private nixify std+hive NixOS monorepo."
+authors = ["RyzeNGrind"]
+src = "docs"
+language = "en"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/RyzeNGrind/nixify-docs"
+edit-url-template = "https://github.com/RyzeNGrind/nixify-docs/edit/main/{path}"
+
+[output.html.search]
+enable = true
