@@ -58,6 +58,33 @@ Activate the leak gate as a hook once per clone:
 git config core.hooksPath .githooks
 ```
 
+## Publishing
+
+- **Live now:** <https://ryzengrind.github.io/nixify-docs/> (GitHub Pages,
+  Nix-built mdBook). Deploys are manual (`workflow_dispatch`) so nothing
+  auto-runs on push.
+  - Deploy a new version: `gh workflow run pages.yml --ref main`.
+- **Also live as a wiki:** <https://deepwiki.com/RyzeNGrind/nixify-docs>.
+
+### Custom domain cutover (`nixify-docs.pages.nixify.dev`)
+
+`nixify.dev` is on Cloudflare, so the domain step is operator-only. **Order
+matters** — a custom domain set *before* DNS points at GitHub makes the
+`github.io` URL redirect to a dead address. Do it in this order:
+
+1. **DNS first (Cloudflare):** add `nixify-docs.pages` (zone `nixify.dev`) as a
+   `CNAME` → `ryzengrind.github.io`. Set it **DNS-only (grey cloud)** for
+   initial verification; once GitHub issues the cert you may re-enable the proxy
+   with SSL mode *Full*. (Today both `pages.nixify.dev` and the target resolve
+   to a generic Cloudflare IP, not GitHub — that's the record to fix.)
+2. **Then point Pages at it:**
+   `gh api repos/RyzeNGrind/nixify-docs/pages -X PUT -f cname=nixify-docs.pages.nixify.dev`
+3. **After the cert issues:**
+   `gh api repos/RyzeNGrind/nixify-docs/pages -X PUT -F https_enforced=true`
+
+`docs/CNAME` records the intended domain; for Actions-based Pages the domain is
+actually set by step 2 (the file is informational).
+
 ## Relationship to the private repo
 
 `nixify-docs` is wired into the private `nixify` monorepo as a git submodule at
