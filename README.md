@@ -6,10 +6,10 @@ NixOS fleet built on [divnix/std](https://github.com/divnix/std) +
 this repository is the curated, scrubbed view of how it is designed and
 operated.
 
-> **Read it as a wiki (no login):**
-> **<https://deepwiki.com/RyzeNGrind/nixify-docs>**
+> **Read the site:** **<https://nixify-docs.pages.ryzengrind.xyz>**
+> &nbsp;·&nbsp; mirror: <https://ryzengrind.github.io/nixify-docs/>
 >
-> Rendered site (Phase B): **<https://nixify-docs.pages.nixify.dev>**
+> **Read it as a wiki (no login):** **<https://deepwiki.com/RyzeNGrind/nixify-docs>**
 >
 > Or read [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (overview) and
 > [`docs/deep/`](docs/deep/index.md) (subsystem deep dives) directly on GitHub.
@@ -34,11 +34,11 @@ no host inventory. Topology is described by **role**, never by address. A
 |------|---------|
 | `docs/` | Recruiter-safe overview + the mdBook / DeepWiki source. |
 | `docs/deep/` | Subsystem deep dives for technical interviewers (secrets, deploy pipeline, CI gates, multi-agent branching). |
-| `docs/CNAME` | Custom domain for Pages: `nixify-docs.pages.nixify.dev`. |
+| `docs/CNAME` | Custom domain for Pages: `nixify-docs.pages.ryzengrind.xyz`. |
 | `flake.nix` | Sub-flake: `nix develop` for a preview shell, `nix build .#docs` to render the site, `nix flake check` to run the leak gate. |
-| `book.toml` | mdBook config (Phase B). |
+| `book.toml` | mdBook config. |
 | `scripts/leak-scan.sh` | Secret/topology leak gate. |
-| `.github/workflows/pages.yml` | Phase B Pages deploy — `workflow_dispatch` only (no auto-run, no wasted Actions quota). |
+| `.github/workflows/pages.yml` | Pages deploy — `workflow_dispatch` only (no auto-run, no wasted Actions quota). |
 
 The overview stays recruiter-safe; the deep dives are kept published-but-quiet —
 a hiring-manager-ready signal left dangling for technical interviewers, never
@@ -60,30 +60,22 @@ git config core.hooksPath .githooks
 
 ## Publishing
 
-- **Live now:** <https://ryzengrind.github.io/nixify-docs/> (GitHub Pages,
-  Nix-built mdBook). Deploys are manual (`workflow_dispatch`) so nothing
-  auto-runs on push.
-  - Deploy a new version: `gh workflow run pages.yml --ref main`.
-- **Also live as a wiki:** <https://deepwiki.com/RyzeNGrind/nixify-docs>.
+- **Custom domain (primary):** <https://nixify-docs.pages.ryzengrind.xyz/> —
+  Cloudflare `CNAME` → `ryzengrind.github.io`, HTTPS enforced, cert issued.
+- **GitHub Pages mirror:** <https://ryzengrind.github.io/nixify-docs/> (redirects
+  to the custom domain).
+- **Wiki (no login):** <https://deepwiki.com/RyzeNGrind/nixify-docs>.
 
-### Custom domain cutover (`nixify-docs.pages.nixify.dev`)
+Built by Nix → mdBook → GitHub Pages. Deploys are manual (`workflow_dispatch`)
+so nothing auto-runs on push:
 
-`nixify.dev` is on Cloudflare, so the domain step is operator-only. **Order
-matters** — a custom domain set *before* DNS points at GitHub makes the
-`github.io` URL redirect to a dead address. Do it in this order:
+```bash
+gh workflow run pages.yml --ref main   # publish a new version
+```
 
-1. **DNS first (Cloudflare):** add `nixify-docs.pages` (zone `nixify.dev`) as a
-   `CNAME` → `ryzengrind.github.io`. Set it **DNS-only (grey cloud)** for
-   initial verification; once GitHub issues the cert you may re-enable the proxy
-   with SSL mode *Full*. (Today both `pages.nixify.dev` and the target resolve
-   to a generic Cloudflare IP, not GitHub — that's the record to fix.)
-2. **Then point Pages at it:**
-   `gh api repos/RyzeNGrind/nixify-docs/pages -X PUT -f cname=nixify-docs.pages.nixify.dev`
-3. **After the cert issues:**
-   `gh api repos/RyzeNGrind/nixify-docs/pages -X PUT -F https_enforced=true`
-
-`docs/CNAME` records the intended domain; for Actions-based Pages the domain is
-actually set by step 2 (the file is informational).
+The custom domain is set as a repo Pages setting (and recorded in `docs/CNAME`);
+for Actions-based Pages the domain lives in the Pages config, not the artifact
+file.
 
 ## Relationship to the private repo
 
