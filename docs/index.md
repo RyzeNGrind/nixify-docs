@@ -16,6 +16,11 @@ leak gate enforces that on every change.
 - **[Architecture overview](ARCHITECTURE.md)** — the cell layout, the host
   fleet by role, the deploy-and-validate pipeline, the secrets model, and the
   multi-agent engineering workflow.
+- **[Deep dive](deep/index.md)** — per-subsystem mechanics for a technical
+  interviewer: [secrets model](deep/secrets-model.md),
+  [deploy & validate pipeline](deep/deploy-pipeline.md),
+  [CI gates](deep/ci-gates.md), and
+  [multi-agent branching](deep/multi-agent-branching.md).
 
 ## At a glance
 

@@ -1,6 +1,6 @@
 # Deep dive (hiring-manager handover)
 
-These pages go a layer below the [architecture overview](../docs/ARCHITECTURE.md)
+These pages go a layer below the [architecture overview](../ARCHITECTURE.md)
 into the subsystems an interviewer is likely to probe. They are still scrubbed —
 no addresses, keys, or secret inventory — but they assume a reader who wants the
 *mechanics*, not the summary.

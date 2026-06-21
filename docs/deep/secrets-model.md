@@ -40,5 +40,5 @@ fleet.
 
 The recipient list, the secret inventory, key fingerprints, and the cache
 signing keys are all absent from this public surface by policy — the leak gate
-([`scripts/leak-scan.sh`](../scripts/leak-scan.sh)) fails the publish if any of
+([`scripts/leak-scan.sh`](../../scripts/leak-scan.sh)) fails the publish if any of
 them appear.

@@ -9,7 +9,10 @@ operated.
 > **Read it as a wiki (no login):**
 > **<https://deepwiki.com/RyzeNGrind/nixify-docs>**
 >
-> Or read [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) directly on GitHub.
+> Rendered site (Phase B): **<https://nixify-docs.pages.nixify.dev>**
+>
+> Or read [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (overview) and
+> [`docs/deep/`](docs/deep/index.md) (subsystem deep dives) directly on GitHub.
 
 ## What this is
 
@@ -29,14 +32,17 @@ no host inventory. Topology is described by **role**, never by address. A
 
 | Path | Purpose |
 |------|---------|
-| `docs/` | Tier 1 — curated overview (this is what's public). Also the mdBook / DeepWiki source. |
+| `docs/` | Recruiter-safe overview + the mdBook / DeepWiki source. |
+| `docs/deep/` | Subsystem deep dives for technical interviewers (secrets, deploy pipeline, CI gates, multi-agent branching). |
+| `docs/CNAME` | Custom domain for Pages: `nixify-docs.pages.nixify.dev`. |
 | `flake.nix` | Sub-flake: `nix develop` for a preview shell, `nix build .#docs` to render the site, `nix flake check` to run the leak gate. |
 | `book.toml` | mdBook config (Phase B). |
 | `scripts/leak-scan.sh` | Secret/topology leak gate. |
-| `.github/workflows/pages.yml` | Phase B Pages deploy — `workflow_dispatch` only. |
+| `.github/workflows/pages.yml` | Phase B Pages deploy — `workflow_dispatch` only (no auto-run, no wasted Actions quota). |
 
-A fuller technical deep-dive (`deep/`) exists but is unpublished until the
-hiring conversation calls for it.
+The overview stays recruiter-safe; the deep dives are kept published-but-quiet —
+a hiring-manager-ready signal left dangling for technical interviewers, never
+required reading for a first-pass recruiter.
 
 ## Local preview
 
